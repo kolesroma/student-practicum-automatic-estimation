@@ -27,6 +27,7 @@
         <lombok.version>1.18.24</lombok.version>
         <swagger.version>1.6.11</swagger.version>
         <validation.version>3.0.0</validation.version>
+        <python.version>2.7.3b1</python.version>
     </properties>
 
     <dependencies>
@@ -103,6 +104,12 @@
             <artifactId>junit-jupiter-api</artifactId>
             <version>${junit.version}</version>
             <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.python</groupId>
+            <artifactId>jython-standalone</artifactId>
+            <version>${python.version}</version>
         </dependency>
     </dependencies>
 
