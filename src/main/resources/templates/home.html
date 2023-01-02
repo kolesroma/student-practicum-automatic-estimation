@@ -6,7 +6,7 @@
 </head>
 <body>
 <h1>Home</h1>
-<form action="/result" method="post">
+<form action="/result/1" method="post">
     <div id="window-wrapper">
         <div id="top-bar">
             <span class="top-bar-btn"></span>
@@ -181,36 +181,9 @@
         $textarea = document.getElementById('textarea-input');
         $highlight = document.getElementById('highlight-area');
 
-        var code = `import os.path as path
-print(path.join("dir", "file")) # => "dir/file"
-
-age = 20
-if age <= 18:
-    print("Young")
-elif age <= 60:
-    print("Adult")
-else:
-    print("Old")
-# => "Adult"
-sum = 0
-for i in range(1, 10):
-    sum += i
-# => 45
-def fibonacci(n = 0):
-    if n == 0:
-        return 0
-    elif n == 1:
-        return 1
-    else:
-        return fibonacci(n - 1) + fibonacci(n - 2)
-
-class Cat:
-    def __init__(name, noise = "Meow"):
-        self.name = name
-        self.noise = noise
-
-    def makeNoise:
-        print(noise * 10)
+        var code = `def function():
+    # Your code
+    # Here
 `;
 
         var triggerHighlight = function() {

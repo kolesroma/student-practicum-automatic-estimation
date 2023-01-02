@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -18,9 +19,11 @@ public class CodeController {
         return "home";
     }
 
-    @PostMapping("/result")
-    public String result(@RequestParam String code, Model model) {
-        model.addAttribute("mark", codeRunner.run(code));
+    @PostMapping("/result/{taskId}")
+    public String result(@RequestParam String code,
+                         @PathVariable Integer taskId,
+                         Model model) {
+        model.addAttribute("mark", codeRunner.estimate(taskId, code));
         return "result";
     }
 }
