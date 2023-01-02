@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:h2:mem:emotionalHelp
+    url: jdbc:h2:mem:practicumEstimation
     username: roma
     password: 123
     driverClassName: org.h2.Driver
