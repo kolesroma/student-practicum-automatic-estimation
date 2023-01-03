@@ -1,6 +1,5 @@
 package com.kpi.kolesnyk.practicum.model;
 
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -10,30 +9,26 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import java.util.Collection;
 
 @Entity
-@Table(name = "param")
+@Table(name = "cases")
 @Getter
 @Setter
 @ToString
-public class ParamEntity {
+public class CaseEntity {
     @Id
     @GeneratedValue
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "function_id")
-    private FunctionEntity function;
+    @JoinColumn(name = "param_id")
+    private ParamEntity param;
 
-    @OneToMany(mappedBy = "param")
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude
-    private Collection<CaseEntity> cases;
+    private String value;
 
-    private String type;
-
-    private String name;
+    @OneToOne
+    @JoinColumn(name = "result_id")
+    private ResultEntity result;
 }
