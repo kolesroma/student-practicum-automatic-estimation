@@ -21,7 +21,7 @@ public class CodeController {
 
     @PostMapping("/result/{taskId}")
     public String result(@RequestParam String code,
-                         @PathVariable Integer taskId,
+                         @PathVariable Long taskId,
                          Model model) {
         model.addAttribute("mark", codeRunner.estimate(taskId, code));
         return "result";
