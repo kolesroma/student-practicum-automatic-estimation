@@ -12,7 +12,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Table(name = "function")
@@ -31,7 +31,7 @@ public class FunctionEntity {
     @OneToMany(mappedBy = "function")
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    private Collection<ParamEntity> params;
+    private List<ParamEntity> params;
 
     private String name;
 }

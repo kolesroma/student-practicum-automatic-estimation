@@ -12,7 +12,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Table(name = "param")
@@ -31,7 +31,7 @@ public class ParamEntity {
     @OneToMany(mappedBy = "param")
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    private Collection<CaseEntity> cases;
+    private List<CaseEntity> cases;
 
     private String type;
 
