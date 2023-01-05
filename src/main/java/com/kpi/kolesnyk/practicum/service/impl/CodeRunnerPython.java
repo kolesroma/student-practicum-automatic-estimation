@@ -27,9 +27,13 @@ public class CodeRunnerPython implements CodeRunner {
     public String estimate(Long taskId, String code) {
         var task = taskRepository.findById(taskId)
                 .orElseThrow();
+        String functionName = task.getFunction().getName();
         try (PythonInterpreter python = new PythonInterpreter()) {
             python.exec(code);
-            var userFunction = python.get(task.getFunction().getName(), PyFunction.class);
+            var userFunction = python.get(functionName, PyFunction.class);
+            if (userFunction == null) {
+                return "cannot find function with name " + functionName;
+            }
             var funcArgs = task.getFunction().getParams();
             var cases = funcArgs.get(0).getCases();
             final int maxMark = cases.size();

@@ -1,6 +1,7 @@
 package com.kpi.kolesnyk.practicum.controller;
 
 import com.kpi.kolesnyk.practicum.service.CodeRunner;
+import com.kpi.kolesnyk.practicum.service.TaskService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequiredArgsConstructor
 public class CodeController {
     private final CodeRunner codeRunner;
+    private final TaskService taskService;
 
     @GetMapping("/home")
     public String home() {
@@ -25,5 +27,18 @@ public class CodeController {
                          Model model) {
         model.addAttribute("mark", codeRunner.estimate(taskId, code));
         return "result";
+    }
+
+    @GetMapping("/tasks")
+    public String tasks(Model model) {
+        model.addAttribute("tasks", taskService.findAll());
+        return "tasks";
+    }
+
+    @GetMapping("/tasks/{taskId}")
+    public String task(@PathVariable Long taskId,
+                       Model model) {
+        model.addAttribute("task", taskService.findById(taskId));
+        return "home";
     }
 }

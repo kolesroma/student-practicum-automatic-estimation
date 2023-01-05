@@ -6,7 +6,11 @@
 </head>
 <body>
 <h1>Home</h1>
-<form action="/result/1" method="post">
+<h2 th:text="${task.name}"></h2>
+<h2 th:text="${task.description}"></h2>
+<h2 th:text="${task.function.name}"></h2>
+<h2 th:text="${task.createdAt}"></h2>
+<form th:action="@{/result/{id}(id = ${task.id})}" method="post">
     <div id="window-wrapper">
         <div id="top-bar">
             <span class="top-bar-btn"></span>
