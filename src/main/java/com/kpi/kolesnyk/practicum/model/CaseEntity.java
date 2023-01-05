@@ -1,8 +1,6 @@
 package com.kpi.kolesnyk.practicum.model;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -18,6 +16,9 @@ import javax.persistence.Table;
 @Getter
 @Setter
 @ToString
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class CaseEntity {
     @Id
     @GeneratedValue
