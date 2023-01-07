@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Registration</title>
+</head>
+<body>
+<div>
+    <form method="post" th:object="${element}" th:action="@{/elements/create}">
+        <h2>Регистрация</h2>
+        <input type="password" path="password" placeholder="Password"></input>
+        <input type="password" path="passwordConfirm" placeholder="Confirm your password"></input>
+        <button type="submit">Зарегистрироваться</button>
+    </form>
+</div>
+</body>
+</html>
+
+<script type="text/javascript" th:inline="javascript">
+
+    /*<![CDATA[*/
+    var some_data =/*[[${data}]]*/;
+    /*]]>*/
+
+</script>

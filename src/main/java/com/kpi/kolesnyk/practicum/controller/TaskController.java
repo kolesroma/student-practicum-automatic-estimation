@@ -22,7 +22,7 @@ public class TaskController {
     public String findById(@PathVariable Long taskId,
                            Model model) {
         model.addAttribute("task", taskService.findById(taskId));
-        return "home";
+        return "task";
     }
 
     @GetMapping("/tasks/create")
