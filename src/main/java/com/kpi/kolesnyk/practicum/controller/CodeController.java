@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.security.Principal;
+
 @Controller
 @RequiredArgsConstructor
 public class CodeController {
@@ -16,8 +18,9 @@ public class CodeController {
     @PostMapping("/result/{taskId}")
     public String result(@RequestParam String code,
                          @PathVariable Long taskId,
+                         Principal principal,
                          Model model) {
-        model.addAttribute("mark", codeRunner.estimate(taskId, code));
+        model.addAttribute("mark", codeRunner.estimate(principal, taskId, code));
         return "result";
     }
 }
