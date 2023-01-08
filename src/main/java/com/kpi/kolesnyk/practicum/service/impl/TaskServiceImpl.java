@@ -1,21 +1,19 @@
 package com.kpi.kolesnyk.practicum.service.impl;
 
 import com.kpi.kolesnyk.practicum.dto.TaskCreationDto;
-import com.kpi.kolesnyk.practicum.model.CaseEntity;
-import com.kpi.kolesnyk.practicum.model.FunctionEntity;
-import com.kpi.kolesnyk.practicum.model.ParamEntity;
-import com.kpi.kolesnyk.practicum.model.ResultEntity;
-import com.kpi.kolesnyk.practicum.model.TaskEntity;
+import com.kpi.kolesnyk.practicum.model.*;
 import com.kpi.kolesnyk.practicum.repository.CaseRepository;
 import com.kpi.kolesnyk.practicum.repository.FunctionRepository;
 import com.kpi.kolesnyk.practicum.repository.ParamRepository;
 import com.kpi.kolesnyk.practicum.repository.ResultRepository;
 import com.kpi.kolesnyk.practicum.repository.TaskRepository;
 import com.kpi.kolesnyk.practicum.service.TaskService;
+import com.kpi.kolesnyk.practicum.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -27,10 +25,20 @@ public class TaskServiceImpl implements TaskService {
     private final ParamRepository paramRepository;
     private final CaseRepository caseRepository;
     private final ResultRepository resultRepository;
+    private final UserService userService;
 
     @Override
-    public List<TaskEntity> findAll() {
-        return taskRepository.findAll();
+    @Transactional
+    public List<TaskEntity> findAll(Principal principal) {
+        var user = userService.findByUsername(principal.getName());
+        if ("ROLE_ADMIN".equals(user.getRole().getAuthority())) {
+            return taskRepository.findAll();
+        }
+        var group = user.getGroup();
+        if (group == null) {
+            return taskRepository.findAllByOwnerId(user.getId());
+        }
+        return group.getTasks();
     }
 
     @Override
