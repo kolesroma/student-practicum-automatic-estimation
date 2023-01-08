@@ -1,11 +1,7 @@
 package com.kpi.kolesnyk.practicum.security.conf;
 
-import com.kpi.kolesnyk.practicum.model.GroupEntity;
-import com.kpi.kolesnyk.practicum.model.RoleEntity;
-import com.kpi.kolesnyk.practicum.model.UserEntity;
 import com.kpi.kolesnyk.practicum.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -14,8 +10,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
-import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -60,31 +54,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .logout()
                 .permitAll()
                 .logoutSuccessUrl("/login");
-    }
-
-    @Bean
-    CommandLineRunner commandLineRunner() {
-        return x -> List.of(UserEntity.builder()
-                                .username("roma")
-                                .password(passwordEncoder().encode("123"))
-                                .role(RoleEntity.builder().id(3L).authority("ROLE_ADMIN").build())
-                                .build(),
-                        UserEntity.builder()
-                                .username("bukasov")
-                                .password(passwordEncoder().encode("123"))
-                                .role(RoleEntity.builder().id(2L).authority("ROLE_TEACHER").build())
-                                .build(),
-                        UserEntity.builder()
-                                .username("dima")
-                                .password(passwordEncoder().encode("123"))
-                                .role(RoleEntity.builder().id(1L).authority("ROLE_STUDENT").build())
-                                .group(GroupEntity.builder().id(1L).description("IT-01").build())
-                                .build(),
-                        UserEntity.builder()
-                                .username("admin")
-                                .password(passwordEncoder().encode("123"))
-                                .role(RoleEntity.builder().id(3L).authority("ROLE_ADMIN").build())
-                                .build())
-                .forEach(userService::saveUser);
     }
 }

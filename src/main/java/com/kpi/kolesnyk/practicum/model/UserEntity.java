@@ -18,6 +18,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
@@ -38,6 +39,14 @@ public class UserEntity {
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private String password;
+
+    private String name;
+
+    private String surname;
+
+    private String email;
+
+    private LocalDate birthday;
 
     @OneToOne()
     @JoinColumn(name = "role_id")
