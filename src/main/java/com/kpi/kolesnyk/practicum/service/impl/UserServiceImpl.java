@@ -10,6 +10,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static com.kpi.kolesnyk.practicum.exception.ExceptionSupplier.*;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -26,14 +28,14 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserEntity findByUsername(String username) {
         return userRepository.findByUsername(username)
-                .orElseThrow();
+                .orElseThrow(USER_NOT_FOUND);
     }
 
     @Override
     @Transactional
     public void saveUser(UserEntity user) {
         if (userRepository.findByUsername(user.getUsername()).isPresent()) {
-            throw new RuntimeException();
+            USER_ALREADY_REGISTERED.get();
         }
         userRepository.save(user);
     }

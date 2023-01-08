@@ -17,6 +17,8 @@ import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static com.kpi.kolesnyk.practicum.exception.ExceptionSupplier.*;
+
 @Service
 @RequiredArgsConstructor
 public class TaskServiceImpl implements TaskService {
@@ -44,7 +46,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public TaskEntity findById(Long taskId) {
         return taskRepository.findById(taskId)
-                .orElseThrow();
+                .orElseThrow(TASK_NOT_FOUND);
     }
 
     @Override

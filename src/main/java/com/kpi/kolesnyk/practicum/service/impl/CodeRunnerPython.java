@@ -21,6 +21,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.security.Principal;
 import java.util.List;
 
+import static com.kpi.kolesnyk.practicum.exception.ExceptionSupplier.*;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -36,10 +38,10 @@ public class CodeRunnerPython implements CodeRunner {
     public String estimate(Principal principal, Long taskId, String code) {
         var user = userService.findByUsername(principal.getName());
         if (!hasUserAccessToTask(user, taskId)) {
-            throw new RuntimeException("You have no access to this task");
+            NO_ACCESS.get();
         }
         var task = taskRepository.findById(taskId)
-                .orElseThrow();
+                .orElseThrow(TASK_NOT_FOUND);
         String functionName = task.getFunction().getName();
         try (PythonInterpreter python = new PythonInterpreter()) {
             python.exec(code);

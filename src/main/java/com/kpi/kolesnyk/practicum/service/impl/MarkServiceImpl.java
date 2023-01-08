@@ -14,6 +14,8 @@ import java.security.Principal;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.kpi.kolesnyk.practicum.exception.ExceptionSupplier.*;
+
 @Service
 @RequiredArgsConstructor
 public class MarkServiceImpl implements MarkService {
@@ -26,8 +28,8 @@ public class MarkServiceImpl implements MarkService {
     @Transactional
     public void create(Long taskId, Long userId, Integer score) {
         markRepository.save(MarkEntity.builder()
-                .user(userRepository.findById(userId).orElseThrow())
-                .task(taskRepository.findById(taskId).orElseThrow())
+                .user(userRepository.findById(userId).orElseThrow(USER_NOT_FOUND))
+                .task(taskRepository.findById(taskId).orElseThrow(TASK_NOT_FOUND))
                 .score(score)
                 .build());
     }
