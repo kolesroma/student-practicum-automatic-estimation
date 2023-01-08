@@ -1,6 +1,6 @@
 package com.kpi.kolesnyk.practicum.service.impl;
 
-import com.kpi.kolesnyk.practicum.model.UserDetailsImpl;
+import com.kpi.kolesnyk.practicum.service.impl.details.UserDetailsImpl;
 import com.kpi.kolesnyk.practicum.model.UserEntity;
 import com.kpi.kolesnyk.practicum.repository.UserRepository;
 import com.kpi.kolesnyk.practicum.service.UserService;

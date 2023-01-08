@@ -1,5 +1,6 @@
 package com.kpi.kolesnyk.practicum.security.conf;
 
+import com.kpi.kolesnyk.practicum.model.GroupEntity;
 import com.kpi.kolesnyk.practicum.model.RoleEntity;
 import com.kpi.kolesnyk.practicum.model.UserEntity;
 import com.kpi.kolesnyk.practicum.service.UserService;
@@ -74,9 +75,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                                 .role(RoleEntity.builder().id(2L).authority("ROLE_TEACHER").build())
                                 .build(),
                         UserEntity.builder()
-                                .username("user")
+                                .username("dima")
                                 .password(passwordEncoder().encode("123"))
-                                .role(RoleEntity.builder().id(1L).authority("ROLE_USER").build())
+                                .role(RoleEntity.builder().id(1L).authority("ROLE_STUDENT").build())
+                                .group(GroupEntity.builder().id(1L).description("IT-01").build())
                                 .build(),
                         UserEntity.builder()
                                 .username("admin")

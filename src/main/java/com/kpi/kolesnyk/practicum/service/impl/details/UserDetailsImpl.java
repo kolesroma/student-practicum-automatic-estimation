@@ -1,11 +1,13 @@
-package com.kpi.kolesnyk.practicum.model;
+package com.kpi.kolesnyk.practicum.service.impl.details;
 
-import lombok.*;
+import com.kpi.kolesnyk.practicum.model.UserEntity;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.persistence.*;
 import java.util.Collection;
 import java.util.List;
 
