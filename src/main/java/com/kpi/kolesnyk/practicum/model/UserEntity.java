@@ -2,36 +2,33 @@ package com.kpi.kolesnyk.practicum.model;
 
 import lombok.*;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "cases")
+@Table(name = "users")
 @Getter
 @Setter
 @ToString
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CaseEntity {
+public class UserEntity {
     @Id
     @GeneratedValue
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "param_id")
-    private ParamEntity param;
+    private String username;
 
-    @Column(name = "val")
-    private String value;
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private String password;
 
-    @OneToOne
-    @JoinColumn(name = "result_id")
-    private ResultEntity result;
+    @OneToOne()
+    @JoinColumn(name = "role_id")
+    private RoleEntity role;
 }

@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Tasks</title>
+</head>
+<body>
+<h1>All tasks for you</h1>
+<div th:each="task: ${tasks}">
+    <a th:href="@{/tasks/{id}(id = ${task.id})}">
+        <span th:text="${task}"></span>
+    </a>
+</div>
+</body>
+</html>

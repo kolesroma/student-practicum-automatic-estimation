@@ -16,5 +16,8 @@ insert into cases(val, param_id, result_id)
 values('s()', 1, 1),
       ('vava(va(1', 1, 2);
 
-
+insert into role(authority)
+values ('ROLE_USER'),
+       ('ROLE_TEACHER'),
+       ('ROLE_ADMIN');
 

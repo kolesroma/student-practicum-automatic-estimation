@@ -1,9 +1,6 @@
 package com.kpi.kolesnyk.practicum.model;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -19,6 +16,9 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ParamEntity {
     @Id
     @GeneratedValue
