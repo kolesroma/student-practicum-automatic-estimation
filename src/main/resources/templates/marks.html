@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Marks</title>
+</head>
+<body>
+<h1>Your marks</h1>
+<div th:each="mark: ${marks}">
+    <span th:text="${mark}"></span>
+</div>
+</body>
+</html>

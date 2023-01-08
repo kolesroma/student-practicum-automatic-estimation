@@ -1,8 +1,12 @@
 package com.kpi.kolesnyk.practicum.service.impl;
 
 import com.kpi.kolesnyk.practicum.model.ParamEntity;
+import com.kpi.kolesnyk.practicum.model.TaskEntity;
+import com.kpi.kolesnyk.practicum.model.UserEntity;
 import com.kpi.kolesnyk.practicum.repository.TaskRepository;
 import com.kpi.kolesnyk.practicum.service.CodeRunner;
+import com.kpi.kolesnyk.practicum.service.MarkService;
+import com.kpi.kolesnyk.practicum.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.python.core.PyException;
@@ -12,7 +16,9 @@ import org.python.core.PyObject;
 import org.python.core.PyString;
 import org.python.util.PythonInterpreter;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.security.Principal;
 import java.util.List;
 
 @Service
@@ -22,9 +28,16 @@ public class CodeRunnerPython implements CodeRunner {
     private static final int PERCENT_COEFFICIENT = 100;
 
     private final TaskRepository taskRepository;
+    private final UserService userService;
+    private final MarkService markService;
 
     @Override
-    public String estimate(Long taskId, String code) {
+    @Transactional
+    public String estimate(Principal principal, Long taskId, String code) {
+        var user = userService.findByUsername(principal.getName());
+        if (!hasUserAccessToTask(user, taskId)) {
+            throw new RuntimeException("You have no access to this task");
+        }
         var task = taskRepository.findById(taskId)
                 .orElseThrow();
         String functionName = task.getFunction().getName();
@@ -34,24 +47,34 @@ public class CodeRunnerPython implements CodeRunner {
             if (userFunction == null) {
                 return "cannot find function with name " + functionName;
             }
-            var funcArgs = task.getFunction().getParams();
-            var cases = funcArgs.get(0).getCases();
-            final int maxMark = cases.size();
-            int mark = 0;
-            for (int i = 0; i < maxMark; i++) {
-                String expected = cases.get(i).getResult().getExpected();
-                String actual = String.valueOf(userFunction.__call__(getFunctionInputWithCaseIndex(funcArgs, i)));
-                log.info("EXPECTED::" + expected + "\tACTUAL::" + actual);
-                if (expected.equals(actual)) {
-                    mark++;
-                }
-            }
-            return Math.round(((double) mark) * PERCENT_COEFFICIENT / maxMark) + "%";
+            int mark = getMarkForTaskWithUserCode(task, userFunction);
+            markService.create(taskId, user.getId(), mark);
+            return mark + "%";
         } catch (PyException e) {
             return e.traceback != null
                     ? e.traceback.dumpStack() + e.getMessage()
                     : e.getMessage();
         }
+    }
+
+    private boolean hasUserAccessToTask(UserEntity user, Long taskId) {
+        return true;
+    }
+
+    private int getMarkForTaskWithUserCode(TaskEntity task, PyFunction userFunction) {
+        var funcArgs = task.getFunction().getParams();
+        var cases = funcArgs.get(0).getCases();
+        final int maxMark = cases.size();
+        int mark = 0;
+        for (int i = 0; i < maxMark; i++) {
+            String expected = cases.get(i).getResult().getExpected();
+            String actual = String.valueOf(userFunction.__call__(getFunctionInputWithCaseIndex(funcArgs, i)));
+            log.info("EXPECTED::" + expected + "\tACTUAL::" + actual);
+            if (expected.equals(actual)) {
+                mark++;
+            }
+        }
+        return (int) Math.round(((double) mark) * PERCENT_COEFFICIENT / maxMark);
     }
 
     private PyObject[] getFunctionInputWithCaseIndex(List<ParamEntity> funcArgs, int index) {
