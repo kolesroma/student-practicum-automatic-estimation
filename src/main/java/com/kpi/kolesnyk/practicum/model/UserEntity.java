@@ -1,11 +1,6 @@
 package com.kpi.kolesnyk.practicum.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -29,6 +24,8 @@ public class UserEntity {
 
     private String username;
 
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private String password;
 
     @OneToOne()
