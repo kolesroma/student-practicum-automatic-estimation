@@ -35,5 +35,7 @@ public class TaskEntity {
     private LocalDateTime createdAt;
 
     @ManyToMany(mappedBy = "tasks")
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private List<GroupEntity> groups;
 }

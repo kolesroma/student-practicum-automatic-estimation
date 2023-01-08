@@ -8,7 +8,8 @@
 <body>
 <h1>Home</h1>
 
-<div sec:authorize="hasRole('ROLE_USER')">Text visible to user.</div>
+<div sec:authorize="hasRole('ROLE_STUDENT')">Text visible to student.</div>
+<div sec:authorize="hasRole('ROLE_TEACHER')">Text visible to teacher.</div>
 <div sec:authorize="hasRole('ROLE_ADMIN')">Text visible to admin.</div>
 
 <span th:text="${#authorization.getAuthentication().principal}"></span>

@@ -33,8 +33,12 @@ public class GroupEntity {
             joinColumns = @JoinColumn(name = "group_id"),
             inverseJoinColumns = @JoinColumn(name = "task_id")
     )
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private List<TaskEntity> tasks;
 
     @ManyToMany(mappedBy = "teacherGroups")
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private List<UserEntity> teachers;
 }

@@ -55,5 +55,7 @@ public class UserEntity {
             joinColumns = @JoinColumn(name = "teacher_id"),
             inverseJoinColumns = @JoinColumn(name = "group_id")
     )
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private List<GroupEntity> teacherGroups;
 }
