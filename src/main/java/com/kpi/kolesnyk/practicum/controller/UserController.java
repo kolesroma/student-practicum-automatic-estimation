@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.validation.Valid;
+import java.security.Principal;
 
 @Controller
 @RequiredArgsConstructor
@@ -18,7 +19,9 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/home")
-    public String home() {
+    public String home(Principal principal,
+                       Model model) {
+        model.addAttribute("user", userService.findByUsername(principal.getName()));
         return "home";
     }
 

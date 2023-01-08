@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Home</title>
+    <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/4.0.0-2/css/bootstrap.min.css} "/>
 </head>
 <body>
 <h1>Home</h1>
@@ -12,7 +13,16 @@
 <div sec:authorize="hasRole('ROLE_TEACHER')">Text visible to teacher.</div>
 <div sec:authorize="hasRole('ROLE_ADMIN')">Text visible to admin.</div>
 
-<span th:text="${#authorization.getAuthentication().principal}"></span>
+<div>Authenticated as <span sec:authentication="name"></span></div>
+<div>Name <span th:text="${user.getName()}"></span></div>
+<div>Surname <span th:text="${user.getSurname()}"></span></div>
+<div>Birthday <span th:text="${user.getBirthday()}"></span></div>
+<div>Group <span th:text="${user.getGroup()}"></span></div>
+<div>Email <span th:text="${user.getEmail()}"></span></div>
 
 </body>
 </html>
+
+<script th:src="@{/webjars/jquery/3.0.0/jquery.min.js}"></script>
+<script th:src="@{/webjars/popper.js/1.12.9-1/umd/popper.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/4.0.0-2/js/bootstrap.min.js}"></script>

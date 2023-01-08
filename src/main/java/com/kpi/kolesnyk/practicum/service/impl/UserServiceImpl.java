@@ -18,10 +18,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDetails loadUserByUsername(String username) {
-        UserEntity user = userRepository.findByUsername(username)
-                .orElseThrow();
+        UserEntity user = findByUsername(username);
         log.info("logged in: " + user);
         return new UserDetailsImpl(user);
+    }
+
+    @Override
+    public UserEntity findByUsername(String username) {
+        return userRepository.findByUsername(username)
+                .orElseThrow();
     }
 
     @Override
