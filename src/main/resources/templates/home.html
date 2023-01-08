@@ -15,6 +15,7 @@
         <h2 sec:authorize="hasRole('ROLE_TEACHER')">Text visible to teacher.</h2>
         <h2 sec:authorize="hasRole('ROLE_ADMIN')">Text visible to admin.</h2>
     </div>
+    <a th:href="@{/tasks}">go to tasks</a>
     <table class="table table-striped table-bordered table-hover">
         <thead>
         <tr>
