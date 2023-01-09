@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 
 <head>
     <meta charset="utf-8">
@@ -21,22 +21,26 @@
 
         <div class="section-title">
             <h2>Marks</h2>
-            <p>Magnam dolores commodi suscipit. Necessitatibus eius consequatur ex aliquid fuga eum quidem. Sit sint consectetur velit. Quisquam quos quisquam cupiditate. Et nemo qui impedit suscipit alias ea. Quia fugiat sit in iste officiis commodi quidem hic quas.</p>
+            <p>
+                Estimation, in statistics, any of numerous procedures used to calculate the value of some property of a population from observations of a sample drawn from the population.
+                A point estimate, for example, is the single number most likely to express the value of the property.
+            </p>
         </div>
 
         <div class="row skills-content">
-
+            <div th:if="${marks.isEmpty()}"><h4 class="text-center"><strong>You do not have marks yet</strong></h4></div>
             <div class="col-lg-12" th:each="mark: ${marks}">
-
                 <div class="progress">
-                    <span class="skill"><th:block th:utext="${mark.task.name}"/> <i class="val" th:text="${mark.score}"></i></span>
+                    <span class="skill">
+                        <th:block sec:authorize="hasRole('ROLE_STUDENT')" th:utext="${mark.task.name}"/>
+                        <th:block sec:authorize="hasRole('ROLE_TEACHER')" th:utext="${': ' + mark.user.username}"/>
+                        <i class="val" th:text="${mark.score}"></i>
+                    </span>
                     <div class="progress-bar-wrap">
                         <div class="progress-bar" role="progressbar" th:aria-valuenow="${mark.score}" aria-valuemin="0" aria-valuemax="100"></div>
                     </div>
                 </div>
-
             </div>
-
         </div>
 
     </div>
