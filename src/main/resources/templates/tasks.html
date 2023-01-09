@@ -15,18 +15,19 @@
 <header id="header" class="d-flex flex-column justify-content-center" th:insert="parts/nav">
 </header><!-- End Header -->
 
-<!-- ======= Services Section ======= -->
+<!-- ======= Tasks Section ======= -->
 <section id="services" class="services">
     <div class="container" data-aos="fade-up">
 
         <div class="section-title">
-            <h2>Services</h2>
-            <p>Magnam dolores commodi suscipit. Necessitatibus eius consequatur ex aliquid fuga eum quidem. Sit sint consectetur velit. Quisquam quos quisquam cupiditate. Et nemo qui impedit suscipit alias ea. Quia fugiat sit in iste officiis commodi quidem hic quas.</p>
+            <h2>Tasks</h2>
+            <p>Writing job descriptions is a task few hiring managers or employers relish, yet they are essential. A great job description can be the difference between having an empty inbox, receiving CVs from poorly-matched job seekers, or having an appropriate number of job applications from qualified candidates.</p>
         </div>
 
-        <div class="row" th:each="task: ${tasks}">
+        <div th:if="${tasks.isEmpty()}"><h4 class="text-center"><strong>You do not have available tasks</strong></h4></div>
 
-            <div class="col-lg-4 col-md-6 d-flex align-items-stretch" data-aos="zoom-in" data-aos-delay="100">
+        <div class="row" th:each="task: ${tasks}">
+            <div class="col-lg-4 col-md-6 align-items-stretch" data-aos="zoom-in" data-aos-delay="100">
                 <div class="icon-box iconbox-blue">
                     <div class="icon">
                         <svg width="100" height="100" viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg">
@@ -34,15 +35,15 @@
                         </svg>
                         <i class="bx bx-tachometer"></i>
                     </div>
-                    <h4><a th:href="@{/tasks/{id}(id = ${task.id})}">Task</a></h4>
-                    <p th:text="${task}"></p>
+                    <h4><a th:href="@{/tasks/{id}(id = ${task.id})}" th:text="${task.name}"></a></h4>
+                    <p th:text="${task.description}"></p>
+                    <p th:text="${task.createdAt}"></p>
                 </div>
             </div>
-
         </div>
 
     </div>
-</section><!-- End Services Section -->
+</section><!-- End Tasks Section -->
 
 <div th:insert="parts/scripts"></div>
 
