@@ -31,7 +31,9 @@ public class UserController {
     }
 
     @GetMapping("/info")
-    public String info() {
+    public String info(Principal principal,
+                       Model model) {
+        model.addAttribute("user", userService.findByUsername(principal.getName()));
         return "info";
     }
 
