@@ -1,12 +1,11 @@
 package com.kpi.kolesnyk.practicum.service.impl;
 
 import com.kpi.kolesnyk.practicum.model.ParamEntity;
-import com.kpi.kolesnyk.practicum.model.QualityEntity;
 import com.kpi.kolesnyk.practicum.model.TaskEntity;
 import com.kpi.kolesnyk.practicum.model.UserEntity;
-import com.kpi.kolesnyk.practicum.repository.TaskRepository;
 import com.kpi.kolesnyk.practicum.service.CodeRunner;
 import com.kpi.kolesnyk.practicum.service.MarkService;
+import com.kpi.kolesnyk.practicum.service.TaskService;
 import com.kpi.kolesnyk.practicum.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +19,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.security.Principal;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.kpi.kolesnyk.practicum.exception.ExceptionSupplier.*;
 
@@ -30,7 +32,7 @@ import static com.kpi.kolesnyk.practicum.exception.ExceptionSupplier.*;
 public class CodeRunnerPython implements CodeRunner {
     private static final int PERCENT_COEFFICIENT = 100;
 
-    private final TaskRepository taskRepository;
+    private final TaskService taskService;
     private final UserService userService;
     private final MarkService markService;
 
@@ -38,10 +40,9 @@ public class CodeRunnerPython implements CodeRunner {
     @Transactional
     public String estimate(Principal principal, Long taskId, String code) {
         var user = userService.findByUsername(principal.getName());
-        if (!hasUserAccessToTask(user, taskId)) {
-            NO_ACCESS.get();
-        }
-        var task = taskRepository.findById(taskId)
+        var task = taskService.findAll(principal).stream()
+                .filter(taskEntity -> taskId.equals(taskEntity.getId()))
+                .findAny()
                 .orElseThrow(TASK_NOT_FOUND);
         String functionName = task.getFunction().getName();
         try (PythonInterpreter python = new PythonInterpreter()) {
@@ -50,23 +51,30 @@ public class CodeRunnerPython implements CodeRunner {
             if (userFunction == null) {
                 return "cannot find function with name " + functionName;
             }
-            int codeMark = getMarkForTaskWithUserCode(task, userFunction);
-            int linterMark = getLinterMark(task, userFunction);
-            int bigNotationMark = getBigNotationMark(task, userFunction);
-            var quality = task.getQuality();
-            int total = (quality.getCaseCoef() * codeMark
-                    + quality.getLinterCoef() * linterMark
-                    + quality.getComplexityCoef() * bigNotationMark) / PERCENT_COEFFICIENT;
-            markService.create(taskId, user.getId(), total);
-            return quality.getCaseCoef() + ":" + codeMark + ">"
-                    + quality.getLinterCoef() + ":" + linterMark + ">"
-                    + quality.getComplexityCoef() + ":" +  bigNotationMark + ">"
-                    + "=" + total +"%";
+            return saveTotalAndGetMarksMap(task, userFunction, user) + "";
         } catch (PyException e) {
             return e.traceback != null
                     ? e.traceback.dumpStack() + e.getMessage()
                     : e.getMessage();
         }
+    }
+
+    private Map<String, Integer> saveTotalAndGetMarksMap(TaskEntity task, PyFunction userFunction, UserEntity user) {
+        var marks = new LinkedHashMap<>(Map.of("codeMark", getMarkForTaskWithUserCode(task, userFunction),
+                "linterMark", getLinterMark(task, userFunction),
+                "bigNotationMark", getBigNotationMark(task, userFunction)));
+        final int total = calculateTotalMark(task, marks);
+        marks.put("total", total);
+        markService.create(task.getId(), user.getId(), total);
+        log.info("got mark:" + user.getUsername() + ":" + marks);
+        return marks;
+    }
+
+    private int calculateTotalMark(TaskEntity task, Map<String, Integer> marks) {
+        var quality = task.getQuality();
+        return (quality.getCaseCoef() * marks.get("codeMark")
+                + quality.getLinterCoef() * marks.get("linterMark")
+                + quality.getComplexityCoef() * marks.get("bigNotationMark")) / PERCENT_COEFFICIENT;
     }
 
     private int getLinterMark(TaskEntity task, PyFunction userFunction) {
@@ -75,10 +83,6 @@ public class CodeRunnerPython implements CodeRunner {
 
     private int getBigNotationMark(TaskEntity task, PyFunction userFunction) {
         return 50;
-    }
-
-    private boolean hasUserAccessToTask(UserEntity user, Long taskId) {
-        return true;
     }
 
     private int getMarkForTaskWithUserCode(TaskEntity task, PyFunction userFunction) {
