@@ -1,6 +1,7 @@
 package com.kpi.kolesnyk.practicum.service.impl;
 
 import com.kpi.kolesnyk.practicum.model.ParamEntity;
+import com.kpi.kolesnyk.practicum.model.QualityEntity;
 import com.kpi.kolesnyk.practicum.model.TaskEntity;
 import com.kpi.kolesnyk.practicum.model.UserEntity;
 import com.kpi.kolesnyk.practicum.repository.TaskRepository;
@@ -49,14 +50,31 @@ public class CodeRunnerPython implements CodeRunner {
             if (userFunction == null) {
                 return "cannot find function with name " + functionName;
             }
-            int mark = getMarkForTaskWithUserCode(task, userFunction);
-            markService.create(taskId, user.getId(), mark);
-            return mark + "%";
+            int codeMark = getMarkForTaskWithUserCode(task, userFunction);
+            int linterMark = getLinterMark(task, userFunction);
+            int bigNotationMark = getBigNotationMark(task, userFunction);
+            var quality = task.getQuality();
+            int total = (quality.getCaseCoef() * codeMark
+                    + quality.getLinterCoef() * linterMark
+                    + quality.getComplexityCoef() * bigNotationMark) / PERCENT_COEFFICIENT;
+            markService.create(taskId, user.getId(), total);
+            return quality.getCaseCoef() + ":" + codeMark + ">"
+                    + quality.getLinterCoef() + ":" + linterMark + ">"
+                    + quality.getComplexityCoef() + ":" +  bigNotationMark + ">"
+                    + "=" + total +"%";
         } catch (PyException e) {
             return e.traceback != null
                     ? e.traceback.dumpStack() + e.getMessage()
                     : e.getMessage();
         }
+    }
+
+    private int getLinterMark(TaskEntity task, PyFunction userFunction) {
+        return 30;
+    }
+
+    private int getBigNotationMark(TaskEntity task, PyFunction userFunction) {
+        return 50;
     }
 
     private boolean hasUserAccessToTask(UserEntity user, Long taskId) {
