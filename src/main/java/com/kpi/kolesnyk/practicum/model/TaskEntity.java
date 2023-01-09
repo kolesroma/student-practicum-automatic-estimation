@@ -38,4 +38,7 @@ public class TaskEntity {
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private List<GroupEntity> groups;
+
+    @OneToOne(mappedBy = "task")
+    private QualityEntity quality;
 }
