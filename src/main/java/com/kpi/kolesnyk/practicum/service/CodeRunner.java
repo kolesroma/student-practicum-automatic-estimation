@@ -1,7 +1,8 @@
 package com.kpi.kolesnyk.practicum.service;
 
 import java.security.Principal;
+import java.util.Map;
 
 public interface CodeRunner {
-    String estimate(Principal principal, Long taskId, String code);
+    Map<String, Integer> estimate(Principal principal, Long taskId, String code);
 }

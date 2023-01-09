@@ -9,6 +9,7 @@ import com.kpi.kolesnyk.practicum.service.TaskService;
 import com.kpi.kolesnyk.practicum.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.python.core.Py;
 import org.python.core.PyException;
 import org.python.core.PyFloat;
 import org.python.core.PyFunction;
@@ -19,7 +20,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.security.Principal;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,8 +38,7 @@ public class CodeRunnerPython implements CodeRunner {
 
     @Override
     @Transactional
-    public String estimate(Principal principal, Long taskId, String code) {
-        var user = userService.findByUsername(principal.getName());
+    public Map<String, Integer> estimate(Principal principal, Long taskId, String code) {
         var task = taskService.findAll(principal).stream()
                 .filter(taskEntity -> taskId.equals(taskEntity.getId()))
                 .findAny()
@@ -49,13 +48,9 @@ public class CodeRunnerPython implements CodeRunner {
             python.exec(code);
             var userFunction = python.get(functionName, PyFunction.class);
             if (userFunction == null) {
-                return "cannot find function with name " + functionName;
+                throw new PyException(Py.RuntimeError, "cannot find function with name " + functionName);
             }
-            return saveTotalAndGetMarksMap(task, userFunction, user) + "";
-        } catch (PyException e) {
-            return e.traceback != null
-                    ? e.traceback.dumpStack() + e.getMessage()
-                    : e.getMessage();
+            return saveTotalAndGetMarksMap(task, userFunction, userService.findByUsername(principal.getName()));
         }
     }
 
@@ -88,17 +83,17 @@ public class CodeRunnerPython implements CodeRunner {
     private int getMarkForTaskWithUserCode(TaskEntity task, PyFunction userFunction) {
         var funcArgs = task.getFunction().getParams();
         var cases = funcArgs.get(0).getCases();
-        final int maxMark = cases.size();
-        int mark = 0;
-        for (int i = 0; i < maxMark; i++) {
+        final int maxPoints = cases.size();
+        int points = 0;
+        for (int i = 0; i < maxPoints; i++) {
             String expected = cases.get(i).getResult().getExpected();
             String actual = String.valueOf(userFunction.__call__(getFunctionInputWithCaseIndex(funcArgs, i)));
             log.info("EXPECTED::" + expected + "\tACTUAL::" + actual);
             if (expected.equals(actual)) {
-                mark++;
+                points++;
             }
         }
-        return (int) Math.round(((double) mark) * PERCENT_COEFFICIENT / maxMark);
+        return points * PERCENT_COEFFICIENT / maxPoints;
     }
 
     private PyObject[] getFunctionInputWithCaseIndex(List<ParamEntity> funcArgs, int index) {

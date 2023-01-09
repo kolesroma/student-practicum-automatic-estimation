@@ -3,6 +3,7 @@ package com.kpi.kolesnyk.practicum.controller.global;
 import com.kpi.kolesnyk.practicum.exception.NoAccessException;
 import com.kpi.kolesnyk.practicum.exception.ResourceNotFoundException;
 import lombok.extern.slf4j.Slf4j;
+import org.python.core.PyException;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -15,11 +16,19 @@ import java.util.stream.Collectors;
 @ControllerAdvice
 public class ErrorHandler {
     private static final String SERVER_ERROR = "Server error";
-    public static final String DEFAULT_ERROR_PAGE = "error";
+    private static final String DEFAULT_ERROR_PAGE = "error";
 
     @ExceptionHandler(ResourceNotFoundException.class)
     public String resourceNotFound(ResourceNotFoundException e, Model model) {
         model.addAttribute("message", e.getMessage());
+        return DEFAULT_ERROR_PAGE;
+    }
+
+    @ExceptionHandler(PyException.class)
+    public String pythonException(PyException e, Model model) {
+        model.addAttribute("message", e.traceback != null
+                ? e.traceback.dumpStack() + e.getMessage()
+                : e.getMessage());
         return DEFAULT_ERROR_PAGE;
     }
 
