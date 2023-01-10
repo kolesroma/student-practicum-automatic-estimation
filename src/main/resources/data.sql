@@ -46,8 +46,8 @@ values (2, 1);
 insert into group_task(group_id, task_id)
 values (1, 1);
 
-insert into task(name, description, owner_id)
-values('very first task', 'easy to pass', 2);
+insert into task(name, description, owner_id, created_at)
+values('very first task', 'easy to pass', 2, (select now()));
 
 insert into function(task_id, name)
 values(1, 'delete_brackets');

@@ -30,6 +30,13 @@ public class UserController {
         return "login";
     }
 
+    @GetMapping("/info")
+    public String info(Principal principal,
+                       Model model) {
+        model.addAttribute("user", userService.findByUsername(principal.getName()));
+        return "info";
+    }
+
     @GetMapping("/registration")
     public String registration(Model model) {
         model.addAttribute("userForm", new UserEntity());

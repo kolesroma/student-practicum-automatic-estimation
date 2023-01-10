@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Cabinet</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+  <meta th:insert="parts/libraries">
+</head>
+
+<body>
+  <i class="bi bi-list mobile-nav-toggle d-lg-none"></i>
+  <header id="header" class="d-flex flex-column justify-content-center" th:insert="parts/nav">
+  </header><!-- End Header -->
+
+  <!-- ======= About Section ======= -->
+  <section id="about" class="about">
+    <div class="container" data-aos="fade-up">
+
+      <div class="section-title">
+        <h2>About</h2>
+        <p>I’m very interested in astrology and learning more about myself, others, and the world around me. Uncovering someone’s astrology chart helps me better understand where the individual is coming from, how they like to be communicated with, and how they like to communicate.</p>
+      </div>
+
+      <div class="row">
+        <div class="text-center col-lg-4">
+          <img src="/img/profile-img.jpg" class="rounded img-fluid" alt="">
+        </div>
+        <div class="col-lg-8 pt-4 pt-lg-0 content">
+          <h3>You Are <span th:text="${user.role.getAuthority().replace('ROLE_', '')}"></span></h3>
+          <p class="fst-italic">
+            I started college as a nursing student. While my career path has completely changed since then, I believe my desire to help others has remained the same.
+          </p>
+          <div class="row">
+            <div class="col-lg-6">
+              <ul>
+                <li><i class="bi bi-chevron-right"></i> <strong>Name:</strong> <span th:text="${user.getName()}"></span></li>
+                <li><i class="bi bi-chevron-right"></i> <strong>Surname:</strong> <span th:text="${user.getSurname()}"></span></li>
+                <li><i class="bi bi-chevron-right"></i> <strong>Birthday:</strong> <span th:text="${user.getBirthday()}"></span></li>
+              </ul>
+            </div>
+            <div class="col-lg-6">
+              <ul>
+                <li><i class="bi bi-chevron-right"></i> <strong>Username:</strong> <span th:text="${user.getUsername()}"></span></li>
+                <li><i class="bi bi-chevron-right"></i> <strong>Group:</strong> <span th:text="*{user.getGroup() != null}? *{user.getGroup().getDescription()} : 'no group'"></span></li>
+                <li><i class="bi bi-chevron-right"></i> <strong>Email:</strong> <span th:text="${user.getEmail()}"></span></li>
+              </ul>
+            </div>
+          </div>
+          <p>
+            When an interviewer is looking to learn more about you as a person, they might ask you to tell some fun facts about yourself.
+            Here are a ton of fun facts about me that are safe to share in any setting.
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </section><!-- End About Section -->
+
+  <div th:insert="parts/scripts"></div>
+
+</body>
+</html>
