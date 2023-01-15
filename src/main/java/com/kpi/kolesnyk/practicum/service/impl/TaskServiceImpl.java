@@ -98,4 +98,18 @@ public class TaskServiceImpl implements TaskService {
                 }
         );
     }
+
+    @Override
+    @Transactional
+    public void update(TaskCreationDto taskDto, Long taskId, Principal principal) {
+        var taskDB = taskRepository.findById(taskId)
+                .orElseThrow(TASK_NOT_FOUND);
+        if (!taskDB.getOwner().getId().equals(
+                userService.findByUsername(principal.getName()).getId())) {
+            NO_ACCESS.get();
+        }
+        taskDB.setName(taskDto.getName());
+        taskDB.setDescription(taskDto.getDescription());
+        taskDB.getFunction().setName(taskDto.getFunction().getName());
+    }
 }

@@ -53,6 +53,11 @@
                     <h4><a th:href="@{/tasks/{id}(id = ${task.id})}" th:text="${task.name}"></a></h4>
                     <p th:text="${task.description}"></p>
                     <p th:text="${task.createdAt}"></p>
+
+                    <th:div sec:authorize="hasRole('ROLE_TEACHER')">
+                        <h4><a th:href="@{/swagger-ui.html}">[EDIT TASK]</a></h4>
+                    </th:div>
+
                 </div>
             </div>
         </div>

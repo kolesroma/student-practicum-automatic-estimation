@@ -4,9 +4,7 @@ import com.kpi.kolesnyk.practicum.dto.TaskCreationDto;
 import com.kpi.kolesnyk.practicum.service.TaskService;
 import com.kpi.kolesnyk.practicum.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.security.Principal;
@@ -26,6 +24,18 @@ public class TaskRestController {
         var user = userService.findByUsername(principal.getName());
         if ("ROLE_TEACHER".equals(user.getRole().getAuthority())) {
             taskService.create(task, principal);
+        } else {
+            NO_ACCESS.get();
+        }
+    }
+
+    @PostMapping(value = "/tasks/update/{taskId}")
+    public void update(@Valid @RequestBody TaskCreationDto task,
+                       @PathVariable Long taskId,
+                       Principal principal) {
+        var user = userService.findByUsername(principal.getName());
+        if ("ROLE_TEACHER".equals(user.getRole().getAuthority())) {
+            taskService.update(task, taskId, principal);
         } else {
             NO_ACCESS.get();
         }

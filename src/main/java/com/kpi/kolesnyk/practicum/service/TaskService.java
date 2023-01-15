@@ -10,4 +10,5 @@ public interface TaskService {
     List<TaskEntity> findAll(Principal principal);
     TaskEntity findById(Long taskId);
     void create(TaskCreationDto taskDto, Principal principal);
+    void update(TaskCreationDto taskDto, Long taskId, Principal principal);
 }
