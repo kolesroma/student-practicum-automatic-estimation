@@ -9,5 +9,5 @@ import java.util.List;
 public interface TaskService {
     List<TaskEntity> findAll(Principal principal);
     TaskEntity findById(Long taskId);
-    void create(TaskCreationDto taskDto);
+    void create(TaskCreationDto taskDto, Principal principal);
 }
