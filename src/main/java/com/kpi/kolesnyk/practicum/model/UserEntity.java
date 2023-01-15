@@ -18,6 +18,9 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -34,16 +37,21 @@ public class UserEntity {
     @GeneratedValue
     private Long id;
 
+    @Size(min = 4)
     private String username;
 
+    @Size(min = 6)
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private String password;
 
+    @NotEmpty
     private String name;
 
+    @NotEmpty
     private String surname;
 
+    @Email
     private String email;
 
     private LocalDate birthday;

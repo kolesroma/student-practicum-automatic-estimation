@@ -5,21 +5,19 @@
     <title>Registration</title>
 </head>
 <body>
+
 <div>
-    <form method="post" th:object="${element}" th:action="@{/elements/create}">
-        <h2>Регистрация</h2>
-        <input type="password" path="password" placeholder="Password"></input>
-        <input type="password" path="passwordConfirm" placeholder="Confirm your password"></input>
-        <button type="submit">Зарегистрироваться</button>
+    <h2>Registration</h2>
+    <form method="post" th:object="${userForm}" th:action="@{/registration}">
+        <input th:field="${userForm.username}" placeholder="username">
+        <input type="password" th:field="${userForm.password}" placeholder="password">
+        <input th:field="${userForm.name}" placeholder="name">
+        <input th:field="${userForm.surname}" placeholder="surname">
+        <input th:field="${userForm.email}" placeholder="email">
+        <input th:field="${userForm.group.description}" placeholder="IX-00">
+        <input type="submit" value="Register">
     </form>
 </div>
+
 </body>
 </html>
-
-<script type="text/javascript" th:inline="javascript">
-
-    /*<![CDATA[*/
-    var some_data =/*[[${data}]]*/;
-    /*]]>*/
-
-</script>

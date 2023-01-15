@@ -1,5 +1,6 @@
 package com.kpi.kolesnyk.practicum.controller;
 
+import com.kpi.kolesnyk.practicum.model.GroupEntity;
 import com.kpi.kolesnyk.practicum.model.UserEntity;
 import com.kpi.kolesnyk.practicum.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,12 @@ import java.security.Principal;
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
+
+    @GetMapping("/")
+    public String root(Principal principal,
+                       Model model) {
+        return home(principal, model);
+    }
 
     @GetMapping("/home")
     public String home(Principal principal,
@@ -39,7 +46,9 @@ public class UserController {
 
     @GetMapping("/registration")
     public String registration(Model model) {
-        model.addAttribute("userForm", new UserEntity());
+        model.addAttribute("userForm", UserEntity.builder()
+                .group(new GroupEntity())
+                .build());
         return "registration";
     }
 
@@ -50,6 +59,6 @@ public class UserController {
             return "registration";
         }
         userService.saveUser(userForm);
-        return "redirect:/tasks";
+        return "redirect:/login?success";
     }
 }
