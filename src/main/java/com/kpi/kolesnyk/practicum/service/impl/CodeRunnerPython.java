@@ -23,6 +23,7 @@ import java.security.Principal;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import static com.kpi.kolesnyk.practicum.exception.ExceptionSupplier.*;
 
@@ -44,6 +45,11 @@ public class CodeRunnerPython implements CodeRunner {
                 .findAny()
                 .orElseThrow(TASK_NOT_FOUND);
         String functionName = task.getFunction().getName();
+        Properties props = new Properties();
+        props.put("python.home", "src/main/resources/Lib");
+        props.put("python.console.encoding", "UTF-8");
+        props.put("python.import.site","false");
+        PythonInterpreter.initialize(System.getProperties(), props, new String[0]);
         try (PythonInterpreter python = new PythonInterpreter()) {
             python.exec(code);
             var userFunction = python.get(functionName, PyFunction.class);
