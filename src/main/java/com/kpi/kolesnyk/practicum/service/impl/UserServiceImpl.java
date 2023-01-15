@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.List;
 
 import static com.kpi.kolesnyk.practicum.exception.ExceptionSupplier.*;
 
@@ -26,6 +27,19 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final GroupRepository groupRepository;
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+    @Override
+    public List<UserEntity> findAll() {
+        return userRepository.findAll();
+    }
+
+    @Override
+    @Transactional
+    public void ban(Long userId) {
+        var userDB = userRepository.findById(userId)
+                .orElseThrow(USER_NOT_FOUND);
+        userDB.setPassword("banned");
+    }
 
     @Override
     public UserDetails loadUserByUsername(String username) {

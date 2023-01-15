@@ -1,5 +1,6 @@
 package com.kpi.kolesnyk.practicum.controller;
 
+import com.kpi.kolesnyk.practicum.exception.ResourceNotFoundException;
 import com.kpi.kolesnyk.practicum.model.GroupEntity;
 import com.kpi.kolesnyk.practicum.model.UserEntity;
 import com.kpi.kolesnyk.practicum.service.UserService;
@@ -9,10 +10,14 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.validation.Valid;
 import java.security.Principal;
+import java.util.List;
+
+import static com.kpi.kolesnyk.practicum.exception.ExceptionSupplier.NO_ACCESS;
 
 @Controller
 @RequiredArgsConstructor
@@ -43,6 +48,31 @@ public class UserController {
         model.addAttribute("user", userService.findByUsername(principal.getName()));
         return "info";
     }
+
+    @GetMapping("/users")
+    public String findAll(Principal principal, Model model) {
+        var user = userService.findByUsername(principal.getName());
+        if ("ROLE_ADMIN".equals(user.getRole().getAuthority())) {
+            model.addAttribute("users", userService.findAll());
+            return "users";
+        } else {
+            throw new ResourceNotFoundException("no access");
+        }
+    }
+
+    @PostMapping("/users/ban/{userId}")
+    public String ban(Principal principal,
+                      @PathVariable Long userId) {
+        var user = userService.findByUsername(principal.getName());
+        if ("ROLE_ADMIN".equals(user.getRole().getAuthority())) {
+            userService.ban(userId);
+        } else {
+            throw new ResourceNotFoundException("no access");
+        }
+        return "redirect:/users?success";
+    }
+
+
 
     @GetMapping("/registration")
     public String registration(Model model) {

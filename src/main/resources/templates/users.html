@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Users</title>
+    <meta content="" name="description">
+    <meta content="" name="keywords">
+    <meta th:insert="parts/libraries">
+</head>
+
+<body>
+<i class="bi bi-list mobile-nav-toggle d-lg-none"></i>
+<header id="header" class="d-flex flex-column justify-content-center" th:insert="parts/nav">
+</header><!-- End Header -->
+
+<!-- ======= User Section ======= -->
+<section id="skills" class="skills section-bg">
+    <div class="container" data-aos="fade-up">
+        <div class="row skills-content">
+            <div class="col-lg-12" th:each="user: ${users}">
+                <div class="progress">
+                    <span class="skill" th:text="${user}"></span>
+                </div>
+                <form method="post" th:action="@{/users/ban/{id}(id = ${user.id})}">
+                    <input type="submit" value="ban">
+                </form>
+            </div>
+        </div>
+    </div>
+</section><!-- End User Section -->
+
+<div th:insert="parts/scripts"></div>
+
+</body>
+</html>
