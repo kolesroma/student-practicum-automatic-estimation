@@ -50,4 +50,9 @@ public class MarkServiceImpl implements MarkService {
         }
         return markRepository.findAllByUserId(user.getId());
     }
+
+    @Override
+    public List<MarkEntity> findAll(Long userId) {
+        return markRepository.findAllByUserId(userId);
+    }
 }

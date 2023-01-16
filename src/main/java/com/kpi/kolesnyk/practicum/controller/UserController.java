@@ -15,9 +15,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.validation.Valid;
 import java.security.Principal;
-import java.util.List;
-
-import static com.kpi.kolesnyk.practicum.exception.ExceptionSupplier.NO_ACCESS;
 
 @Controller
 @RequiredArgsConstructor
