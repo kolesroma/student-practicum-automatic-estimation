@@ -46,9 +46,8 @@ public class CodeRunnerPython implements CodeRunner {
                 .orElseThrow(TASK_NOT_FOUND);
         String functionName = task.getFunction().getName();
         Properties props = new Properties();
-        props.put("python.home", "src/main/resources/Lib");
         props.put("python.console.encoding", "UTF-8");
-        props.put("python.import.site","false");
+        props.put("python.import.site", "false");
         PythonInterpreter.initialize(System.getProperties(), props, new String[0]);
         try (PythonInterpreter python = new PythonInterpreter()) {
             python.exec(code);
