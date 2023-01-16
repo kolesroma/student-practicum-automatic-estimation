@@ -5,6 +5,7 @@
     <title>Task</title>
     <meta th:insert="parts/libraries">
     <link th:href="@{/css/pythonSyntax.css}" rel="stylesheet"/>
+    <link th:href="@{/css/stopwatch.css}" rel="stylesheet"/>
 </head>
 <body>
 
@@ -30,6 +31,34 @@
                         </ul>
                         <li th:text="${task.description}"></li>
                     </ul>
+                </div>
+
+                <div class="container">
+                    <div class="clock">
+                        <svg viewBox="0 0 220 220">
+                            <circle
+                                    shape-rendering="geometricPrecision"
+                                    cx="110"
+                                    cy="110"
+                                    r="96"
+                            />
+                            <circle
+                                    shape-rendering="geometricPrecision"
+                                    class="indicator"
+                                    cx="110"
+                                    cy="110"
+                                    r="96"
+                            />
+                        </svg>
+                        <div class="value-container">
+                            <span class="minutes">25</span>
+                            :
+                            <span class="seconds">00</span>
+                        </div>
+                    </div>
+                    <div class="buttons-container">
+                        <i class="fas fa-play"></i>
+                    </div>
                 </div>
             </div>
 
@@ -58,4 +87,5 @@
 
 </body>
 <script th:src="@{/js/pythonSyntax.js}"></script>
+<script th:src="@{/js/stopwatch.js}"></script>
 </html>
