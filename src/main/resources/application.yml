@@ -1,14 +1,5 @@
 spring:
   datasource:
-    url: jdbc:h2:mem:practicumEstimation
-    username: roma
-    password: 123
-    driverClassName: org.h2.Driver
-  jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
-    show-sql: false
-    hibernate:
-      ddl-auto: update
-  h2:
-    console:
-      enabled: true
+    url: jdbc:mysql://localhost:3306/practicumEstimation
+    username: roman
+    password: password
