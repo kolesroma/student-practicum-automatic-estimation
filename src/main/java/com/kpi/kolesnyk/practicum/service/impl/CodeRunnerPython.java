@@ -16,8 +16,11 @@ import org.python.core.PyFunction;
 import org.python.core.PyObject;
 import org.python.core.PyString;
 import org.python.util.PythonInterpreter;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
+import org.springframework.web.client.RestTemplate;
 
 import java.security.Principal;
 import java.util.LinkedHashMap;
@@ -32,10 +35,12 @@ import static com.kpi.kolesnyk.practicum.exception.ExceptionSupplier.*;
 @Slf4j
 public class CodeRunnerPython implements CodeRunner {
     private static final int PERCENT_COEFFICIENT = 100;
+    private static final String LINTER_API_URL = "https://www.pythonchecker.com/codechecker?source_code={code}";
 
     private final TaskService taskService;
     private final UserService userService;
     private final MarkService markService;
+    private final RestTemplate restTemplate;
 
     @Override
     @Transactional
@@ -55,13 +60,16 @@ public class CodeRunnerPython implements CodeRunner {
             if (userFunction == null) {
                 throw new PyException(Py.RuntimeError, "cannot find function with name " + functionName);
             }
-            return saveTotalAndGetMarksMap(task, userFunction, userService.findByUsername(principal.getName()));
+            return saveTotalAndGetMarksMap(code, task, userFunction, userService.findByUsername(principal.getName()));
         }
     }
 
-    private Map<String, Integer> saveTotalAndGetMarksMap(TaskEntity task, PyFunction userFunction, UserEntity user) {
+    private Map<String, Integer> saveTotalAndGetMarksMap(String code,
+                                                         TaskEntity task,
+                                                         PyFunction userFunction,
+                                                         UserEntity user) {
         var marks = new LinkedHashMap<>(Map.of("codeMark", getMarkForTaskWithUserCode(task, userFunction),
-                "linterMark", getLinterMark(task, userFunction),
+                "linterMark", getLinterMark(code),
                 "bigNotationMark", getBigNotationMark(task, userFunction)));
         final int total = calculateTotalMark(task, marks);
         marks.put("total", total);
@@ -77,8 +85,16 @@ public class CodeRunnerPython implements CodeRunner {
                 + quality.getComplexityCoef() * marks.get("bigNotationMark")) / PERCENT_COEFFICIENT;
     }
 
-    private int getLinterMark(TaskEntity task, PyFunction userFunction) {
-        return 30;
+    private int getLinterMark(String code) {
+        try {
+            String body = restTemplate
+                    .exchange(LINTER_API_URL, HttpMethod.GET, null, String.class, Map.of("code", code))
+                    .getBody();
+            log.info("got code: " + body);
+            return Math.max(100 - 4 * StringUtils.countOccurrencesOf(body, "hint"), 0);
+        } catch (Exception e) {
+            return 0;
+        }
     }
 
     private int getBigNotationMark(TaskEntity task, PyFunction userFunction) {

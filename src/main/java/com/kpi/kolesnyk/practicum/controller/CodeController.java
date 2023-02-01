@@ -1,5 +1,6 @@
 package com.kpi.kolesnyk.practicum.controller;
 
+import com.kpi.kolesnyk.practicum.exception.ResourceNotFoundException;
 import com.kpi.kolesnyk.practicum.service.CodeRunner;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -38,7 +39,9 @@ public class CodeController {
                     .get(12, TimeUnit.SECONDS);
             executorService.shutdown();
             return marks;
-        } catch (InterruptedException | ExecutionException | TimeoutException e) {
+        } catch (InterruptedException | ExecutionException e) {
+            throw new ResourceNotFoundException(e.getMessage());
+        } catch (TimeoutException e) {
             throw new AsyncRequestTimeoutException();
         }
     }
