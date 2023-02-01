@@ -3,3 +3,6 @@ spring:
     url: jdbc:mysql://localhost:3306/practicumEstimation
     username: roman
     password: password
+  mvc:
+    async:
+      request-timeout: 12000

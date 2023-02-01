@@ -12,7 +12,7 @@ import javax.persistence.Table;
 import java.util.List;
 
 @Entity
-@Table(name = "function")
+@Table(name = "`function`")
 @Getter
 @Setter
 @ToString

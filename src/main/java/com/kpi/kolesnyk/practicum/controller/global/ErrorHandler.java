@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.context.request.async.AsyncRequestTimeoutException;
 
 import javax.validation.ConstraintViolationException;
 import java.util.stream.Collectors;
@@ -17,10 +18,17 @@ import java.util.stream.Collectors;
 public class ErrorHandler {
     private static final String SERVER_ERROR = "Server error";
     private static final String DEFAULT_ERROR_PAGE = "error";
+    private static final String TIMEOUT_MESSAGE = "Such a long execution time, we not allow code lasts more than 12 seconds. Consider refactoring your solution";
 
     @ExceptionHandler(ResourceNotFoundException.class)
     public String resourceNotFound(ResourceNotFoundException e, Model model) {
         model.addAttribute("message", e.getMessage());
+        return DEFAULT_ERROR_PAGE;
+    }
+
+    @ExceptionHandler(AsyncRequestTimeoutException.class)
+    public String requestTimeout(Model model) {
+        model.addAttribute("message", TIMEOUT_MESSAGE);
         return DEFAULT_ERROR_PAGE;
     }
 
